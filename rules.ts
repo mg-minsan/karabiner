@@ -2,6 +2,20 @@ import fs from "fs";
 import { KarabinerRules } from "./types";
 import { createHyperSubLayers, app, open, window, shell } from "./utils";
 
+const openChromeProfile = `
+otell application "Google Chrome"
+  repeat with w in windows
+    repeat with t in tabs of w
+      if title of t contains "Profile 5" then
+        set active tab index of w to (index of t)
+        set index of w to 1
+        activate
+        return
+      end if
+    end repeat
+  end repeat
+end tell`;
+
 const rules: KarabinerRules[] = [
   // Define the Hyper key itself
   {
@@ -56,22 +70,23 @@ const rules: KarabinerRules[] = [
     ],
   },
   ...createHyperSubLayers({
-    spacebar: open(
-      "raycast://extensions/stellate/mxstbr-commands/create-notion-todo"
-    ),
     // b = "B"rowse
     b: {
       t: open("https://twitter.com"),
       // Quarterly "P"lan
       p: open("https://mxstbr.com/cal"),
-      y: open("https://news.ycombinator.com"),
-      f: open("https://facebook.com"),
-      r: open("https://reddit.com"),
-      h: open("https://hashnode.com/draft"),
+      j: open(""),
     },
     // o = "Open" applications
+    slash: app("Ghostty"),
+    spacebar: app("Claude"),
+    9: app("Google Chrome"),
+    period: app("Visual Studio Code"),
+    n: open("raycast://extensions/raycast/raycast-notes/raycast-notes"),
     o: {
       1: app("1Password"),
+      2: shell`openChromeProfile`,
+      b: app("Obsidian"),
       g: app("Google Chrome"),
       c: app("Notion Calendar"),
       v: app("Zed"),
@@ -79,7 +94,6 @@ const rules: KarabinerRules[] = [
       s: app("Slack"),
       e: app("Superhuman"),
       n: app("Notion"),
-      t: app("Terminal"),
       // Open todo list managed via *H*ypersonic
       h: open(
         "notion://www.notion.so/stellatehq/7b33b924746647499d906c55f89d5026"
@@ -89,15 +103,17 @@ const rules: KarabinerRules[] = [
       m: app("Reflect"),
       r: app("Reflect"),
       f: app("Finder"),
+      t: app("Telegram"),
+      u: app("Figma"),
       // "i"Message
       i: app("Texts"),
-      p: app("Spotify"),
-      a: app("iA Presenter"),
-      // "W"hatsApp has been replaced by Texts
-      w: open("Texts"),
+      p: app("TablePlus"),
       l: open(
         "raycast://extensions/stellate/mxstbr-commands/open-mxs-is-shortlink"
       ),
+    },
+    c: {
+      s: open("raycast://script-commands/seed"),
     },
 
     // TODO: This doesn't quite work yet.
@@ -180,7 +196,6 @@ const rules: KarabinerRules[] = [
         ],
       },
     },
-
     // s = "System"
     s: {
       u: {
@@ -289,23 +304,10 @@ const rules: KarabinerRules[] = [
       },
     },
 
-    // c = Musi*c* which isn't "m" because we want it to be on the left hand
-    c: {
-      p: {
-        to: [{ key_code: "play_or_pause" }],
-      },
-      n: {
-        to: [{ key_code: "fastforward" }],
-      },
-      b: {
-        to: [{ key_code: "rewind" }],
-      },
-    },
-
     // r = "Raycast"
     r: {
       c: open("raycast://extensions/thomas/color-picker/pick-color"),
-      n: open("raycast://script-commands/dismiss-notifications"),
+      n: open("raycast://extensions/raycast/raycast-notes/raycast-notes"),
       l: open(
         "raycast://extensions/stellate/mxstbr-commands/create-mxs-is-shortlink"
       ),
@@ -362,9 +364,42 @@ fs.writeFileSync(
       profiles: [
         {
           name: "Default",
+          virtual_hid_keyboard: { keyboard_type_v2: "ansi" },
           complex_modifications: {
             rules,
           },
+          devices: [
+            {
+              identifiers: {
+                is_keyboard: true,
+                product_id: 37904,
+                vendor_id: 1423,
+              },
+              simple_modifications: [
+                {
+                  from: { key_code: "left_option" },
+                  to: [{ key_code: "left_command" }],
+                },
+                {
+                  from: { key_code: "left_command" },
+                  to: [{ key_code: "left_option" }],
+                },
+              ],
+            },
+            {
+              identifiers: {
+                is_keyboard: true,
+                product_id: 258,
+                vendor_id: 10730,
+              },
+              simple_modifications: [
+                {
+                  from: { key_code: "end" },
+                  to: [{ apple_vendor_top_case_key_code: "keyboard_fn" }],
+                },
+              ],
+            },
+          ],
         },
       ],
     },
