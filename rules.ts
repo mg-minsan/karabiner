@@ -106,7 +106,7 @@ const rules: KarabinerRules[] = [
       t: app("Telegram"),
       u: app("Figma"),
       // "i"Message
-      i: app("Texts"),
+      i: app("Postman"),
       p: app("TablePlus"),
       l: open(
         "raycast://extensions/stellate/mxstbr-commands/open-mxs-is-shortlink"

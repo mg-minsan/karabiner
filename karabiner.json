@@ -1164,10 +1164,10 @@
               {
                 "to": [
                   {
-                    "shell_command": "open -a 'Texts.app'"
+                    "shell_command": "open -a 'Postman.app'"
                   }
                 ],
-                "description": "Open -a 'Texts.app'",
+                "description": "Open -a 'Postman.app'",
                 "type": "basic",
                 "from": {
                   "key_code": "i",
